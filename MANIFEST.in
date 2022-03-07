@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include pos_addons13 *.css
+recursive-include pos_addons13 *.csv
+recursive-include pos_addons13 *.html
+recursive-include pos_addons13 *.ico
+recursive-include pos_addons13 *.js
+recursive-include pos_addons13 *.json
+recursive-include pos_addons13 *.md
+recursive-include pos_addons13 *.png
+recursive-include pos_addons13 *.py
+recursive-include pos_addons13 *.svg
+recursive-include pos_addons13 *.txt
+recursive-exclude pos_addons13 *.pyc
