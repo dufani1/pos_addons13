@@ -1,4 +1,58 @@
 $(document).ready(function () {
+
+    // Show Warehouse storage location button
+    waitForElementToDisplay("section.item-details-container > div.form-container", () => {
+        jQuery(
+            `<div class="storage-location">
+                <button id="view-storage-location" class="btn btn-primary btn-block" style="margin: 40px 20px 0px 0px">
+                    ${frappe._("View Warehouse Storage Locations")}
+                </button>
+            </div>`
+        ).insertAfter("section.item-details-container > div.form-container");
+
+        document.querySelector("#view-storage-location").addEventListener("click", function () {
+            var pos_item = cur_pos.item_details.current_item;
+            if (pos_item) {
+                frappe.db.get_doc("Item", pos_item.item_code).then(res => {
+                    var locations = res.item_storage_location_in_warehouse
+                    var li_rows = "";
+                    for (var i = 0; i < locations.length; i++) {
+                        if (locations[i].warehouse_2 == pos_item.warehouse) {
+                            var doc_url = `${frappe.urllib.get_base_url()}/app/storage-location-in-warehouse/${locations[i].storage_location_in_warehouse}`;
+                            li_rows += `<li>
+                                        <a href="${doc_url}" target="_blank">${locations[i].storage_location_in_warehouse}</a>
+                                    </li>`
+                        }
+                    }
+                    if(locations.length == 0) {
+                        li_rows += "<h5>" + frappe._("No Storage locations available for this Item") + "</h5>";
+                    }
+                    var d = new frappe.ui.Dialog({
+                        title: frappe._("Warehouse Storage Locations"),
+                        fields: [
+                            {
+                                label: 'STD',
+                                fieldname: 'storage_locations_table',
+                                fieldtype: 'HTML',
+                                options: `
+                                        <ul>
+                                            ${li_rows}
+                                        </ul>
+                                `,
+                            }
+                        ],
+                        primary_action_label: frappe._("Close"),
+                        primary_action(values) {
+                            d.hide();
+                        }
+                    });
+                    d.show();
+                })
+            }
+        });
+    }, 1000, 30000);
+
+    // Vehicle filters
     waitForElementToDisplay("div.filter-section", () => {
         var pos = frappe.pages['point-of-sale'].pos;
         jQuery(`
@@ -124,7 +178,7 @@ $(document).ready(function () {
             });
         }
 
-    }, 200, 9000);
+    }, 200, 30000);
 
     function waitForElementToDisplay(selector, callback, checkFrequencyInMs, timeoutInMs) {
         var startTimeInMs = Date.now();
