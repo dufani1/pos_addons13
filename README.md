@@ -1,6 +1,6 @@
 ## Pos Addons13
 
-include search filters make, engine etc in Poin of sale page
+include search filters make, engine etc in Point of sale page and more
 
 #### License
 
